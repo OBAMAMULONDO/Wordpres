@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="Wordpress">
         <div class="logo">Victor's WordPress</div>
@@ -16,21 +18,43 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#news-container">Latest News</a></li>
+                 <ul>
+                
                 <li><a href="#sports-container">Sports</a></li>
                 <li><a href="#politics-container">Politics</a></li>
                 <li><a href="#health-container">Health</a></li>
                 <li><a href="#entertainment-container">Entertainment</a></li>
-                <li><a href="#business-container">Business</a></li>
+                <li><a href="business-container">Business</a></li>
+                <li><a href="#advertise">Advertise</a></li>
                 <li><a href="#science-container">Science</a></li>
                 <li><a href="#tech-container">Technology</a></li>
+                <li><a href="#advertise">Advertise</a></li>
                 <li><a href="#contact-us">Contact us</a></li>
+            </ul>
             </ul>
         </div>
     </div>
 
-    <h1>The New Times</h1>
+    <!-- Body-section -->
+    <u><h1>The New Times</h1></u>
+
     <div class="card">
-        <p>Get the latest news 📰 through Victor's WordPress, Worldly wide advertising NewsPaper, Sports news, etc.</p>
+        <p>Get latest news 📰 through Victor's WordPress, Worldly wide advertising NewsPaper, Sports news etc.</p>
+    </div>
+
+    <div class="home" id="home">
+        <div class="home-bar">
+            <ul>
+                
+                <li><a href="#sports-container">Sports</a></li>
+                <li><a href="#politics-container">Politics</a></li>
+                 
+                <li><a href="business-container">Business</a></li>
+                
+                <li><a href="#science-container">Science</a></li>
+                <li><a href="#tech-container">Technology</a></li>
+            </ul>
+        </div>
     </div>
 
     <!-- Search Bar Section -->
@@ -47,43 +71,55 @@
         <div id="news-container"></div>
     </div>
 
-    <!-- Additional News Sections -->
+    <!-- Sports News Section -->
     <div id="sports-news">
         <h2>Sports News</h2>
         <div id="sports-container"></div>
     </div>
+    
+    <!-- Politics News Section -->
     <div id="politics-news">
         <h2>Politics News</h2>
         <div id="politics-container"></div>
     </div>
-    <div id="tech-news">
-        <h2>Technology News</h2>
-        <div id="tech-container"></div>
-    </div>
-    <div id="health-news">
-        <h2>Health News</h2>
-        <div id="health-container"></div>
-    </div>
-    <div id="business-news">
-        <h2>Business News</h2>
-        <div id="business-container"></div>
-    </div>
-    <div id="entertainment-news">
-        <h2>Entertainment News</h2>
-        <div id="entertainment-container"></div>
-    </div>
-    <div id="science-news">
-        <h2>Science News</h2>
-        <div id="science-container"></div>
-    </div>
+    <!-- Add below your existing Politics section -->
+<!-- Technology News Section -->
+<div id="tech-news">
+    <h2>Technology News</h2>
+    <div id="tech-container"></div>
+</div>
+
+<!-- Health News Section -->
+<div id="health-news">
+    <h2>Health News</h2>
+    <div id="health-container"></div>
+</div>
+
+<!-- Business News Section -->
+<div id="business-news">
+    <h2>Business News</h2>
+    <div id="business-container"></div>
+</div>
+
+<!-- Entertainment News Section -->
+<div id="entertainment-news">
+    <h2>Entertainment News</h2>
+    <div id="entertainment-container"></div>
+</div>
+
+<!-- Science News Section -->
+<div id="science-news">
+    <h2>Science News</h2>
+    <div id="science-container"></div>
+</div>
 
     <script>
-        const API_KEY = '2bbd2783cd8e4154bed2686e913ca4c6'; // Your NewsAPI key
+        const API_KEY = '2bbd2783cd8e4154bed2686e913ca4c6'; // Replace with your actual NewsAPI key
 
         // Function to fetch and display the news
         async function fetchNews(category, containerId) {
             const url = `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}&language=en`;
-
+            
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -95,7 +131,7 @@
                         const articleElement = document.createElement('div');
                         articleElement.classList.add('news-item');
                         articleElement.innerHTML = `
-                            <h3 id="article-${article.title}"><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                            <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
                             <p>${article.description}</p>
                             <img src="${article.urlToImage}" alt="News Image" />
                             <p><small>Published: ${new Date(article.publishedAt).toLocaleString()}</small></p>
@@ -110,58 +146,57 @@
             }
         }
 
-        // Fetch news for different categories
+        // Ensure that the DOM is fully loaded before running the script
         document.addEventListener('DOMContentLoaded', function () {
-            fetchNews('general', 'news-container');
-            fetchNews('sports', 'sports-container');
-            fetchNews('politics', 'politics-container');
-            fetchNews('technology', 'tech-container');
-            fetchNews('health', 'health-container');
-            fetchNews('business', 'business-container');
-            fetchNews('entertainment', 'entertainment-container');
-            fetchNews('science', 'science-container');
+            // Fetch news for each category
+            fetchNews('general', 'news-container'); // Latest news
+            fetchNews('sports', 'sports-container'); // Sports news
+            fetchNews('politics', 'politics-container'); // Politics news
         });
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener("click", function (e) {
-                e.preventDefault();
-                const targetElement = document.querySelector(this.getAttribute("href"));
-                targetElement.scrollIntoView({
-                    behavior: "smooth"
-                });
-            });
+        // MENU TOGGLE
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
         });
 
-        // Search feature to highlight and scroll to matching news
+        // SEARCH FEATURE - Update as you type
         const searchInput = document.querySelector('.search-form input[type="search"]');
+
         searchInput.addEventListener('input', function () {
             const query = searchInput.value.trim().toLowerCase();
-            const searchResults = document.querySelector('.search-results');
-            if (searchResults) searchResults.remove();
 
+            // Remove old results
+            const oldResults = document.querySelector('.search-results');
+            if (oldResults) oldResults.remove();
+
+            // If the input field is empty, do not show results
             if (!query) return;
 
+            // Create a new results box
             const resultsBox = document.createElement('div');
             resultsBox.className = 'search-results';
-            resultsBox.style.display = 'block';
+            resultsBox.style.display = 'block'; // Make visible
 
+            // Get all content that should be searchable
+            const searchableElements = document.querySelectorAll('.card, p, h1, h2, h3, li, .home-bar a, .fa-solid');
+            const alreadyAdded = new Set(); // Track unique text content that has already been added
             let foundAny = false;
-            const allArticles = document.querySelectorAll('.news-item h3');
-            const alreadyAdded = new Set();
 
-            allArticles.forEach(article => {
-                const text = article.textContent.trim().toLowerCase();
-                if (text.includes(query) && !alreadyAdded.has(text)) {
+            searchableElements.forEach(el => {
+                const text = el.textContent.trim().toLowerCase();
+
+                // Ensure we don't include irrelevant content and prevent duplicates
+                if (text && text.includes(query) && !el.closest('.nav-links') && !el.closest('.Wordpress') && !alreadyAdded.has(text)) {
                     foundAny = true;
                     const resultItem = document.createElement('p');
-                    resultItem.textContent = article.textContent;
-                    resultItem.addEventListener('click', function () {
-                        article.scrollIntoView({
-                            behavior: "smooth"
-                        });
-                    });
+                    resultItem.textContent = el.textContent;
                     resultsBox.appendChild(resultItem);
+
+                    // Add the text to the 'alreadyAdded' set to prevent duplicate entries
                     alreadyAdded.add(text);
                 }
             });
@@ -175,6 +210,24 @@
 
             document.querySelector('.search-section').appendChild(resultsBox);
         });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute("href")).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+        fetchNews('technology', 'tech-container');
+fetchNews('health', 'health-container');
+fetchNews('business', 'business-container');
+fetchNews('entertainment', 'entertainment-container');
+fetchNews('science', 'science-container');
     </script>
+
 </body>
-    </html>
+
+</html>
