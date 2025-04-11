@@ -17,35 +17,21 @@
     <div class="nav-links">
       <ul>
         <li><a href="#home">Home</a></li>
-        <li><a href="#news">Latest News</a></li>
-        <li><a href="#sports">Sports</a></li>
-        <li><a href="#politics">Politics</a></li>
+        <li><a href="#latest-news">News</a></li>
+        <li><a href="#sports-news">Sports</a></li>
+        <li><a href="#politics-news">Politics</a></li>
         <li><a href="#advertise">Advertise</a></li>
         <li><a href="#contact-us">Contact us</a></li>
       </ul>
     </div>
   </div>
 
-  <u><h1>The New Times</h1></u>
-
+  <h1><u>The New Times</u></h1>
   <div class="card">
-    <p>
-      Get latest news 📰 through Victor's WordPress, Worldly wide advertising NewsPaper, Sports news etc.
-    </p>
+    <p>Get the latest updates on news, sports, and politics through Victor's WordPress.</p>
   </div>
 
-  <div class="home" id="home">
-    <div class="home-bar">
-      <ul>
-        <li><a href="#news-container">News</a></li>
-        <li><a href="#sports-container">Sports</a></li>
-        <li><a href="#politics-container">Politics</a></li>
-        <li><a href="#advertise">Advertise</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Search Bar Section -->
+  <!-- Search Bar -->
   <div class="search-section">
     <form class="search-form" role="search" method="get" action="#">
       <input type="search" name="s" placeholder="Search here..." required />
@@ -55,19 +41,19 @@
 
   <!-- Latest News Section -->
   <div id="latest-news">
-    <h2>Latest News</h2>
+    <h2>News</h2>
     <div id="news-container"></div>
   </div>
 
-  <!-- Sports News Section -->
+  <!-- Sports Section -->
   <div id="sports-news">
-    <h2>Sports News</h2>
+    <h2>Sports</h2>
     <div id="sports-container"></div>
   </div>
 
-  <!-- Politics News Section -->
+  <!-- Politics Section -->
   <div id="politics-news">
-    <h2>Politics News</h2>
+    <h2>Politics</h2>
     <div id="politics-container"></div>
   </div>
 
@@ -84,39 +70,40 @@
       try {
         const response = await fetch(`${proxy}${encodeURIComponent(url)}`);
         const data = await response.json();
-        const parsedData = new window.DOMParser().parseFromString(data.contents, "text/xml");
-        const items = parsedData.querySelectorAll("item");
-
+        const parsed = new window.DOMParser().parseFromString(data.contents, "text/xml");
+        const items = parsed.querySelectorAll("item");
         const container = document.getElementById(containerId);
         container.innerHTML = "";
 
         items.forEach((item, index) => {
           if (index >= 5) return; // Limit to 5 articles
-
           const title = item.querySelector("title").textContent;
           const link = item.querySelector("link").textContent;
           const pubDate = item.querySelector("pubDate").textContent;
-          const description = item.querySelector("description").textContent;
 
           const article = document.createElement("div");
           article.classList.add("news-item");
           article.innerHTML = `
             <h3><a href="${link}" target="_blank">${title}</a></h3>
-            <p>${description}</p>
-            <p><small>Published: ${pubDate}</small></p>
+            <p><small>${pubDate}</small></p>
           `;
           container.appendChild(article);
         });
-      } catch (err) {
-        console.error("Failed to load RSS feed:", err);
-        document.getElementById(containerId).innerHTML = '<p>News not available.</p>';
+      } catch (error) {
+        document.getElementById(containerId).innerHTML = '<p>Unable to load news.</p>';
+        console.error(error);
       }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    function loadAllNews() {
       fetchRSS(rssUrls.latestNews, "news-container");
       fetchRSS(rssUrls.sportsNews, "sports-container");
       fetchRSS(rssUrls.politicsNews, "politics-container");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      loadAllNews();
+      setInterval(loadAllNews, 300000); // Refresh every 5 minutes
     });
 
     const menuToggle = document.querySelector(".menu-toggle");
@@ -128,7 +115,6 @@
     });
 
     const searchInput = document.querySelector('.search-form input[type="search"]');
-
     searchInput.addEventListener("input", function () {
       const query = searchInput.value.trim().toLowerCase();
       const oldResults = document.querySelector(".search-results");
@@ -138,26 +124,27 @@
       const resultsBox = document.createElement("div");
       resultsBox.className = "search-results";
       resultsBox.style.display = "block";
-      const searchableElements = document.querySelectorAll(".card, p, h1, h2, h3, li, .home-bar a, .fa-solid");
-      const alreadyAdded = new Set();
-      let foundAny = false;
 
-      searchableElements.forEach(el => {
+      const elements = document.querySelectorAll(".card, p, h1, h2, h3, li, .home-bar a, .fa-solid");
+      const seen = new Set();
+      let found = false;
+
+      elements.forEach(el => {
         const text = el.textContent.trim().toLowerCase();
-        if (text && text.includes(query) && !el.closest(".nav-links") && !el.closest(".Wordpress") && !alreadyAdded.has(text)) {
-          foundAny = true;
-          const resultItem = document.createElement("p");
-          resultItem.textContent = el.textContent;
-          resultsBox.appendChild(resultItem);
-          alreadyAdded.add(text);
+        if (text && text.includes(query) && !el.closest(".nav-links") && !seen.has(text)) {
+          found = true;
+          const item = document.createElement("p");
+          item.textContent = el.textContent;
+          resultsBox.appendChild(item);
+          seen.add(text);
         }
       });
 
-      if (!foundAny) {
-        const noMatch = document.createElement("p");
-        noMatch.textContent = `No results found for "${query}".`;
-        noMatch.style.color = "#ff4d4d";
-        resultsBox.appendChild(noMatch);
+      if (!found) {
+        const noResult = document.createElement("p");
+        noResult.textContent = `No results found for "${query}".`;
+        noResult.style.color = "#ff4d4d";
+        resultsBox.appendChild(noResult);
       }
 
       document.querySelector(".search-section").appendChild(resultsBox);
