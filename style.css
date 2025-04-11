@@ -155,7 +155,7 @@ h1{
 .home .home-bar ul li a{
      transition: transform 0.4s ease;
      display: flex;
-     color:white;
+     color: White;
      align-items: center;
      justify-content: center;
      word-spacing: 9px;
