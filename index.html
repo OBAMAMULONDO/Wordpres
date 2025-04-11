@@ -2,163 +2,187 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Victor's WordPress</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victor's WordPress</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="Wordpress">
-    <div class="logo">Victor's WordPress</div>
-    <i class="fa-solid fa-bars menu-toggle"></i>
-    <div class="nav-links">
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#latest-news">News</a></li>
-        <li><a href="#sports-news">Sports</a></li>
-        <li><a href="#politics-news">Politics</a></li>
-        <li><a href="#advertise">Advertise</a></li>
-        <li><a href="#contact-us">Contact us</a></li>
-      </ul>
+    <div class="Wordpress">
+        <div class="logo">Victor's WordPress</div>
+        <i class="fa-solid fa-bars menu-toggle"></i>
+        <div class="nav-links">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#news-container">Latest News</a></li>
+                <li><a href="#sports-container">Sports</a></li>
+                <li><a href="#politics-container">Politics</a></li>
+                <li><a href="#advertise-container">Advertise</a></li>
+                <li><a href="#contact-us">Contact us</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
 
-  <h1><u>The New Times</u></h1>
-  <div class="card">
-    <p>Get the latest updates on news, sports, and politics through Victor's WordPress.</p>
-  </div>
+    <!-- Body-section -->
+    <u><h1>The New Times</h1></u>
 
-  <!-- Search Bar -->
-  <div class="search-section">
-    <form class="search-form" role="search" method="get" action="#">
-      <input type="search" name="s" placeholder="Search here..." required />
-      <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
-  </div>
+    <div class="card">
+        <p>Get latest news 📰 through Victor's WordPress, Worldly wide advertising NewsPaper, Sports news etc.</p>
+    </div>
 
-  <!-- Latest News Section -->
-  <div id="latest-news">
-    <h2>News</h2>
-    <div id="news-container"></div>
-  </div>
+    <div class="home" id="home">
+        <div class="home-bar">
+            <ul>
+                <li><a href="#news-container">News</a></li>
+                <li><a href="#sports-container">Sports</a></li>
+                <li><a href="#politics-container">Politics</a></li>
+                <li><a href="#advertise">Advertise</a></li>
+            </ul>
+        </div>
+    </div>
 
-  <!-- Sports Section -->
-  <div id="sports-news">
-    <h2>Sports</h2>
-    <div id="sports-container"></div>
-  </div>
+    <!-- Search Bar Section -->
+    <div class="search-section">
+        <form class="search-form" role="search" method="get" action="#">
+            <input type="search" name="s" placeholder="Search here..." required>
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
 
-  <!-- Politics Section -->
-  <div id="politics-news">
-    <h2>Politics</h2>
-    <div id="politics-container"></div>
-  </div>
+    <!-- Latest News Section -->
+    <div id="latest-news">
+        <h2>Latest News</h2>
+        <div id="news-container"></div>
+    </div>
 
-  <script>
-    const rssUrls = {
-      latestNews: 'https://rss.cnn.com/rss/edition_world.rss',
-      sportsNews: 'https://rss.cnn.com/rss/edition_sport.rss',
-      politicsNews: 'https://rss.cnn.com/rss/edition_politics.rss',
-    };
+    <!-- Sports News Section -->
+    <div id="sports-news">
+        <h2>Sports News</h2>
+        <div id="sports-container"></div>
+    </div>
+    
+    <!-- Politics News Section -->
+    <div id="politics-news">
+        <h2>Politics News</h2>
+        <div id="politics-container"></div>
+    </div>
 
-    async function fetchRSS(url, containerId) {
-      const proxy = "https://api.allorigins.win/get?url=";
+    <script>
+        // RSS Feed URLs for different categories (replace with actual RSS URLs)
+        const rssUrls = {
+            latestNews: 'https://rss.cnn.com/rss/edition_world.rss', // Example URL for World News
+            sportsNews: 'https://rss.cnn.com/rss/edition_sport.rss', // Example URL for Sports News
+            politicsNews: 'https://rss.cnn.com/rss/edition_politics.rss', // Example URL for Politics News
+        };
 
-      try {
-        const response = await fetch(`${proxy}${encodeURIComponent(url)}`);
-        const data = await response.json();
-        const parsed = new window.DOMParser().parseFromString(data.contents, "text/xml");
-        const items = parsed.querySelectorAll("item");
-        const container = document.getElementById(containerId);
-        container.innerHTML = "";
+        // Function to fetch and display the RSS feed
+        async function fetchRSS(url, containerId) {
+            try {
+                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                const container = document.getElementById(containerId);
+                container.innerHTML = ''; // Clear previous content
 
-        items.forEach((item, index) => {
-          if (index >= 5) return; // Limit to 5 articles
-          const title = item.querySelector("title").textContent;
-          const link = item.querySelector("link").textContent;
-          const pubDate = item.querySelector("pubDate").textContent;
-
-          const article = document.createElement("div");
-          article.classList.add("news-item");
-          article.innerHTML = `
-            <h3><a href="${link}" target="_blank">${title}</a></h3>
-            <p><small>${pubDate}</small></p>
-          `;
-          container.appendChild(article);
-        });
-      } catch (error) {
-        document.getElementById(containerId).innerHTML = '<p>Unable to load news.</p>';
-        console.error(error);
-      }
-    }
-
-    function loadAllNews() {
-      fetchRSS(rssUrls.latestNews, "news-container");
-      fetchRSS(rssUrls.sportsNews, "sports-container");
-      fetchRSS(rssUrls.politicsNews, "politics-container");
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      loadAllNews();
-      setInterval(loadAllNews, 300000); // Refresh every 5 minutes
-    });
-
-    const menuToggle = document.querySelector(".menu-toggle");
-    const navLinks = document.querySelector(".nav-links");
-
-    menuToggle.addEventListener("click", () => {
-      menuToggle.classList.toggle("active");
-      navLinks.classList.toggle("active");
-    });
-
-    const searchInput = document.querySelector('.search-form input[type="search"]');
-    searchInput.addEventListener("input", function () {
-      const query = searchInput.value.trim().toLowerCase();
-      const oldResults = document.querySelector(".search-results");
-      if (oldResults) oldResults.remove();
-      if (!query) return;
-
-      const resultsBox = document.createElement("div");
-      resultsBox.className = "search-results";
-      resultsBox.style.display = "block";
-
-      const elements = document.querySelectorAll(".card, p, h1, h2, h3, li, .home-bar a, .fa-solid");
-      const seen = new Set();
-      let found = false;
-
-      elements.forEach(el => {
-        const text = el.textContent.trim().toLowerCase();
-        if (text && text.includes(query) && !el.closest(".nav-links") && !seen.has(text)) {
-          found = true;
-          const item = document.createElement("p");
-          item.textContent = el.textContent;
-          resultsBox.appendChild(item);
-          seen.add(text);
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(item => {
+                        const article = document.createElement('div');
+                        article.classList.add('news-item');
+                        article.innerHTML = `
+                            <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                            <p>${item.description}</p>
+                            <img src="${item.enclosure ? item.enclosure.link : ''}" alt="News Image" />
+                            <p><small>Published: ${item.pubDate}</small></p>
+                        `;
+                        container.appendChild(article);
+                    });
+                } else {
+                    container.innerHTML = '<p>No news available.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching RSS feed:', error);
+            }
         }
-      });
 
-      if (!found) {
-        const noResult = document.createElement("p");
-        noResult.textContent = `No results found for "${query}".`;
-        noResult.style.color = "#ff4d4d";
-        resultsBox.appendChild(noResult);
-      }
-
-      document.querySelector(".search-section").appendChild(resultsBox);
-    });
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
-          behavior: "smooth"
+        // Ensure that the DOM is fully loaded before running the script
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch and display the news for each category
+            fetchRSS(rssUrls.latestNews, 'news-container');
+            fetchRSS(rssUrls.sportsNews, 'sports-container');
+            fetchRSS(rssUrls.politicsNews, 'politics-container');
         });
-      });
-    });
-  </script>
+
+        // MENU TOGGLE
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // SEARCH FEATURE - Update as you type
+        const searchInput = document.querySelector('.search-form input[type="search"]');
+
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.trim().toLowerCase();
+
+            // Remove old results
+            const oldResults = document.querySelector('.search-results');
+            if (oldResults) oldResults.remove();
+
+            // If the input field is empty, do not show results
+            if (!query) return;
+
+            // Create a new results box
+            const resultsBox = document.createElement('div');
+            resultsBox.className = 'search-results';
+            resultsBox.style.display = 'block'; // Make visible
+
+            // Get all content that should be searchable
+            const searchableElements = document.querySelectorAll('.card, p, h1, h2, h3, li, .home-bar a, .fa-solid');
+            const alreadyAdded = new Set(); // Track unique text content that has already been added
+            let foundAny = false;
+
+            searchableElements.forEach(el => {
+                const text = el.textContent.trim().toLowerCase();
+
+                // Ensure we don't include irrelevant content and prevent duplicates
+                if (text && text.includes(query) && !el.closest('.nav-links') && !el.closest('.Wordpress') && !alreadyAdded.has(text)) {
+                    foundAny = true;
+                    const resultItem = document.createElement('p');
+                    resultItem.textContent = el.textContent;
+                    resultsBox.appendChild(resultItem);
+
+                    // Add the text to the 'alreadyAdded' set to prevent duplicate entries
+                    alreadyAdded.add(text);
+                }
+            });
+
+            if (!foundAny) {
+                const noMatch = document.createElement('p');
+                noMatch.textContent = `No results found for "${query}".`;
+                noMatch.style.color = '#ff4d4d';
+                resultsBox.appendChild(noMatch);
+            }
+
+            document.querySelector('.search-section').appendChild(resultsBox);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute("href")).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
