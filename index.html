@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="Wordpress">
         <div class="logo">Victor's WordPress</div>
@@ -16,10 +18,19 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#news-container">Latest News</a></li>
+                 <ul>
+                
                 <li><a href="#sports-container">Sports</a></li>
                 <li><a href="#politics-container">Politics</a></li>
-                <li><a href="#advertise-container">Advertise</a></li>
+                <li><a href="#health-container">Health</a></li>
+                <li><a href="#entertainment-container">Entertainment</a></li>
+                <li><a href="business-container">Business</a></li>
+                <li><a href="#advertise">Advertise</a></li>
+                <li><a href="#science-container">Science</a></li>
+                <li><a href="#tech-container">Technology</a></li>
+                <li><a href="#advertise">Advertise</a></li>
                 <li><a href="#contact-us">Contact us</a></li>
+            </ul>
             </ul>
         </div>
     </div>
@@ -34,10 +45,14 @@
     <div class="home" id="home">
         <div class="home-bar">
             <ul>
-                <li><a href="#news-container">News</a></li>
+                
                 <li><a href="#sports-container">Sports</a></li>
                 <li><a href="#politics-container">Politics</a></li>
-                <li><a href="#advertise">Advertise</a></li>
+                 
+                <li><a href="business-container">Business</a></li>
+                
+                <li><a href="#science-container">Science</a></li>
+                <li><a href="#tech-container">Technology</a></li>
             </ul>
         </div>
     </div>
@@ -61,24 +76,50 @@
         <h2>Sports News</h2>
         <div id="sports-container"></div>
     </div>
-
+    
     <!-- Politics News Section -->
     <div id="politics-news">
         <h2>Politics News</h2>
         <div id="politics-container"></div>
     </div>
+    <!-- Add below your existing Politics section -->
+<!-- Technology News Section -->
+<div id="tech-news">
+    <h2>Technology News</h2>
+    <div id="tech-container"></div>
+</div>
+
+<!-- Health News Section -->
+<div id="health-news">
+    <h2>Health News</h2>
+    <div id="health-container"></div>
+</div>
+
+<!-- Business News Section -->
+<div id="business-news">
+    <h2>Business News</h2>
+    <div id="business-container"></div>
+</div>
+
+<!-- Entertainment News Section -->
+<div id="entertainment-news">
+    <h2>Entertainment News</h2>
+    <div id="entertainment-container"></div>
+</div>
+
+<!-- Science News Section -->
+<div id="science-news">
+    <h2>Science News</h2>
+    <div id="science-container"></div>
+</div>
 
     <script>
-        // NewsAPI URL
-        const apiKey = '2bbd2783cd8e4154bed2686e913ca4c6'; // Replace with your API key
-        const apiUrl = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=' + apiKey;
+        const API_KEY = '2bbd2783cd8e4154bed2686e913ca4c6'; // Replace with your actual NewsAPI key
 
-        // CORS proxy URL (for testing)
-        const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-        const corsApiUrl = corsProxy + apiUrl;
-
-        // Function to fetch and display news
-        async function fetchNews(url, containerId) {
+        // Function to fetch and display the news
+        async function fetchNews(category, containerId) {
+            const url = `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}&language=en`;
+            
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -86,16 +127,16 @@
                 container.innerHTML = ''; // Clear previous content
 
                 if (data.articles && data.articles.length > 0) {
-                    data.articles.forEach(item => {
-                        const article = document.createElement('div');
-                        article.classList.add('news-item');
-                        article.innerHTML = `
-                            <h3><a href="${item.url}" target="_blank">${item.title}</a></h3>
-                            <p>${item.description}</p>
-                            <img src="${item.urlToImage ? item.urlToImage : ''}" alt="News Image" />
-                            <p><small>Published: ${item.publishedAt}</small></p>
+                    data.articles.forEach(article => {
+                        const articleElement = document.createElement('div');
+                        articleElement.classList.add('news-item');
+                        articleElement.innerHTML = `
+                            <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                            <p>${article.description}</p>
+                            <img src="${article.urlToImage}" alt="News Image" />
+                            <p><small>Published: ${new Date(article.publishedAt).toLocaleString()}</small></p>
                         `;
-                        container.appendChild(article);
+                        container.appendChild(articleElement);
                     });
                 } else {
                     container.innerHTML = '<p>No news available.</p>';
@@ -108,9 +149,9 @@
         // Ensure that the DOM is fully loaded before running the script
         document.addEventListener('DOMContentLoaded', function () {
             // Fetch news for each category
-            fetchNews(corsApiUrl, 'news-container');   // Latest News
-            fetchNews(corsApiUrl, 'sports-container'); // Sports News
-            fetchNews(corsApiUrl, 'politics-container'); // Politics News
+            fetchNews('general', 'news-container'); // Latest news
+            fetchNews('sports', 'sports-container'); // Sports news
+            fetchNews('politics', 'politics-container'); // Politics news
         });
 
         // MENU TOGGLE
@@ -180,7 +221,13 @@
                 });
             });
         });
+        fetchNews('technology', 'tech-container');
+fetchNews('health', 'health-container');
+fetchNews('business', 'business-container');
+fetchNews('entertainment', 'entertainment-container');
+fetchNews('science', 'science-container');
     </script>
 
 </body>
+
 </html>
